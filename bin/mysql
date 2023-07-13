@@ -1,0 +1,4 @@
+#!/bin/bash
+
+# Create local MySQL container for development purposes
+docker run -d --name mysql -p 3307:3306 -e MYSQL_ROOT_PASSWORD=123 mysql:8.0.33
