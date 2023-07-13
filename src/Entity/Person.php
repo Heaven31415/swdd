@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\PersonRepository;
+use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PersonRepository::class)]
@@ -42,10 +43,10 @@ class Person
     private ?string $skinColor = null;
 
     #[ORM\Column]
-    private ?\DateTimeImmutable $created = null;
+    private ?DateTimeImmutable $created = null;
 
     #[ORM\Column]
-    private ?\DateTimeImmutable $edited = null;
+    private ?DateTimeImmutable $edited = null;
 
     public function getId(): ?int
     {
@@ -160,24 +161,24 @@ class Person
         return $this;
     }
 
-    public function getCreated(): ?\DateTimeImmutable
+    public function getCreated(): ?DateTimeImmutable
     {
         return $this->created;
     }
 
-    public function setCreated(\DateTimeImmutable $created): static
+    public function setCreated(DateTimeImmutable $created): static
     {
         $this->created = $created;
 
         return $this;
     }
 
-    public function getEdited(): ?\DateTimeImmutable
+    public function getEdited(): ?DateTimeImmutable
     {
         return $this->edited;
     }
 
-    public function setEdited(\DateTimeImmutable $edited): static
+    public function setEdited(DateTimeImmutable $edited): static
     {
         $this->edited = $edited;
 
