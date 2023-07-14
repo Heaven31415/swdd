@@ -57,9 +57,13 @@ class Person
     #[ORM\ManyToMany(targetEntity: Film::class, inversedBy: 'people')]
     private Collection $films;
 
+    #[ORM\ManyToMany(targetEntity: Species::class, inversedBy: 'people')]
+    private Collection $species;
+
     public function __construct()
     {
         $this->films = new ArrayCollection();
+        $this->species = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -231,6 +235,30 @@ class Person
     public function removeFilm(Film $film): static
     {
         $this->films->removeElement($film);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Species>
+     */
+    public function getSpecies(): Collection
+    {
+        return $this->species;
+    }
+
+    public function addSpecies(Species $species): static
+    {
+        if (!$this->species->contains($species)) {
+            $this->species->add($species);
+        }
+
+        return $this;
+    }
+
+    public function removeSpecies(Species $species): static
+    {
+        $this->species->removeElement($species);
 
         return $this;
     }
