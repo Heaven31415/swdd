@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Repository\PlanetRepository;
 use DateTimeImmutable;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PlanetRepository::class)]
@@ -50,6 +52,14 @@ class Planet
 
     #[ORM\Column]
     private ?DateTimeImmutable $edited = null;
+
+    #[ORM\OneToMany(mappedBy: 'homeworld', targetEntity: Person::class, orphanRemoval: true)]
+    private Collection $people;
+
+    public function __construct()
+    {
+        $this->people = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -196,6 +206,36 @@ class Planet
     public function setEdited(DateTimeImmutable $edited): static
     {
         $this->edited = $edited;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Person>
+     */
+    public function getPeople(): Collection
+    {
+        return $this->people;
+    }
+
+    public function addPerson(Person $person): static
+    {
+        if (!$this->people->contains($person)) {
+            $this->people->add($person);
+            $person->setHomeworld($this);
+        }
+
+        return $this;
+    }
+
+    public function removePerson(Person $person): static
+    {
+        if ($this->people->removeElement($person)) {
+            // set the owning side to null (unless already changed)
+            if ($person->getHomeworld() === $this) {
+                $person->setHomeworld(null);
+            }
+        }
 
         return $this;
     }

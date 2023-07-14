@@ -48,6 +48,10 @@ class Person
     #[ORM\Column]
     private ?DateTimeImmutable $edited = null;
 
+    #[ORM\ManyToOne(inversedBy: 'people')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Planet $homeworld = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -181,6 +185,18 @@ class Person
     public function setEdited(DateTimeImmutable $edited): static
     {
         $this->edited = $edited;
+
+        return $this;
+    }
+
+    public function getHomeworld(): ?Planet
+    {
+        return $this->homeworld;
+    }
+
+    public function setHomeworld(?Planet $homeworld): static
+    {
+        $this->homeworld = $homeworld;
 
         return $this;
     }
