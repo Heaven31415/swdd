@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Repository\FilmRepository;
 use DateTimeImmutable;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -42,6 +44,14 @@ class Film
 
     #[ORM\Column]
     private ?DateTimeImmutable $edited = null;
+
+    #[ORM\ManyToMany(targetEntity: Person::class, mappedBy: 'films')]
+    private Collection $people;
+
+    public function __construct()
+    {
+        $this->people = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -152,6 +162,33 @@ class Film
     public function setEdited(DateTimeImmutable $edited): static
     {
         $this->edited = $edited;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Person>
+     */
+    public function getPeople(): Collection
+    {
+        return $this->people;
+    }
+
+    public function addPerson(Person $person): static
+    {
+        if (!$this->people->contains($person)) {
+            $this->people->add($person);
+            $person->addFilm($this);
+        }
+
+        return $this;
+    }
+
+    public function removePerson(Person $person): static
+    {
+        if ($this->people->removeElement($person)) {
+            $person->removeFilm($this);
+        }
 
         return $this;
     }

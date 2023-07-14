@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Repository\PersonRepository;
 use DateTimeImmutable;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PersonRepository::class)]
@@ -51,6 +53,14 @@ class Person
     #[ORM\ManyToOne(inversedBy: 'people')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Planet $homeworld = null;
+
+    #[ORM\ManyToMany(targetEntity: Film::class, inversedBy: 'people')]
+    private Collection $films;
+
+    public function __construct()
+    {
+        $this->films = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -197,6 +207,30 @@ class Person
     public function setHomeworld(?Planet $homeworld): static
     {
         $this->homeworld = $homeworld;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Film>
+     */
+    public function getFilms(): Collection
+    {
+        return $this->films;
+    }
+
+    public function addFilm(Film $film): static
+    {
+        if (!$this->films->contains($film)) {
+            $this->films->add($film);
+        }
+
+        return $this;
+    }
+
+    public function removeFilm(Film $film): static
+    {
+        $this->films->removeElement($film);
 
         return $this;
     }
