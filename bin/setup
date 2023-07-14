@@ -1,0 +1,14 @@
+#!/bin/bash
+
+: '
+This script should be run once after setting
+the value of DATABASE_URL environment variable
+in order to prepare project for local development
+'
+
+# Install project dependencies
+composer install
+
+# Setup database
+php bin/console doctrine:database:create
+php bin/console doctrine:migrations:migrate --no-interaction
