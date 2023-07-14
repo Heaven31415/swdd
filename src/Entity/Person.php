@@ -63,11 +63,15 @@ class Person
     #[ORM\ManyToMany(targetEntity: Vehicle::class, inversedBy: 'people')]
     private Collection $vehicles;
 
+    #[ORM\ManyToMany(targetEntity: Starship::class, inversedBy: 'people')]
+    private Collection $starships;
+
     public function __construct()
     {
         $this->films = new ArrayCollection();
         $this->species = new ArrayCollection();
         $this->vehicles = new ArrayCollection();
+        $this->starships = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -287,6 +291,30 @@ class Person
     public function removeVehicle(Vehicle $vehicle): static
     {
         $this->vehicles->removeElement($vehicle);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Starship>
+     */
+    public function getStarships(): Collection
+    {
+        return $this->starships;
+    }
+
+    public function addStarship(Starship $starship): static
+    {
+        if (!$this->starships->contains($starship)) {
+            $this->starships->add($starship);
+        }
+
+        return $this;
+    }
+
+    public function removeStarship(Starship $starship): static
+    {
+        $this->starships->removeElement($starship);
 
         return $this;
     }
